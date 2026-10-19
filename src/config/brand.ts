@@ -1,0 +1,258 @@
+export const BRAND = {
+  name: "DADSTUDIOARCH",
+  legalName: "DADSTUDIOARCH Architecture & Construction",
+  tagline: "Thoughtfully Designed. Beautifully Built.",
+  heroHeadline: "Thoughtfully Designed.\nBeautifully Built.",
+  heroSubheadline:
+    "From architectural concepts and interior design to construction, exterior detailing, and UPVC solutions, DADSTUDIOARCH brings every part of your space together.",
+  shortDescription:
+    "Integrated architecture, construction, interior design, exterior facade detailing, and UPVC window and door solutions.",
+  fullDescription:
+    "DADSTUDIOARCH delivers complete design-and-build solutions across residential, villa, commercial, and interior spaces. We unite spatial creativity, structural engineering, premium materials, and precision execution under one coordinated studio.",
+  contactNote:
+    "Consultations & Project Discussions Available by Appointment",
+  palette: {
+    charcoal: "#202321",
+    ivory: "#F7F5F0",
+    white: "#FFFFFF",
+    stone: "#D8D3CA",
+    bronze: "#A9855B",
+    bronzeLight: "#C4A47C",
+  },
+  seo: {
+    homeTitle: "DADSTUDIOARCH | Architecture, Construction & Interior Design",
+    homeDescription:
+      "Explore DADSTUDIOARCH for architectural design, construction, interior and exterior design, and UPVC windows and doors solutions.",
+  },
+  services: [
+    {
+      id: "architecture-planning",
+      slug: "architecture-planning",
+      title: "Architecture & Planning",
+      shortDesc: "Architectural concepts, spatial planning, building layouts, and design development.",
+      fullDesc:
+        "Every project begins with a deep exploration of site context, natural light, spatial proportion, and functional flow. From initial conceptual massing to comprehensive permit-ready architectural drawing sets, our architecture practice balances visionary aesthetics with constructibility.",
+      image: "/images/services/service-architecture.jpg",
+      deliverables: [
+        "Conceptual & Schematic Design",
+        "Spatial Planning & Layout Optimization",
+        "3D Architectural Visualization",
+        "Detailed Working & Structural Drawings",
+        "Regulatory & Permitting Coordination",
+      ],
+    },
+    {
+      id: "construction-build",
+      slug: "construction-build",
+      title: "Construction & Build",
+      shortDesc: "Residential and commercial construction, coordinated execution, and attention to quality.",
+      fullDesc:
+        "Precision in execution is where architectural intent becomes enduring reality. Our construction methodology focuses on high-grade reinforced structures, disciplined site management, laser-measured tolerances, and rigorous multi-stage quality control from foundation to handover.",
+      image: "/images/services/service-construction.jpg",
+      deliverables: [
+        "Turnkey Residential Construction",
+        "Modern Villa & Estate Construction",
+        "Boutique Commercial Developments",
+        "Structural Engineering & Formwork",
+        "On-Site Quality & Safety Assurance",
+      ],
+    },
+    {
+      id: "interior-design",
+      slug: "interior-design",
+      title: "Interior Design",
+      shortDesc: "Functional, aesthetically refined interiors, material palettes, lighting concepts, and space planning.",
+      fullDesc:
+        "We curate living and working environments characterized by restrained luxury, bespoke joinery, tactile natural materials, and architectural lighting choreography. Every room is composed with proportional balance, intuitive ergonomics, and warmth.",
+      image: "/images/services/service-interior.jpg",
+      deliverables: [
+        "Custom Space Planning & Zoning",
+        "Material, Stone & Timber Curation",
+        "Architectural Lighting Schemes",
+        "Bespoke Millwork & Joinery Design",
+        "Furniture & Soft Furnishings Selection",
+      ],
+    },
+    {
+      id: "exterior-facade",
+      slug: "exterior-facade",
+      title: "Exterior & Facade Design",
+      shortDesc: "Exterior aesthetics, facade concepts, material combinations, and architectural detailing.",
+      fullDesc:
+        "A building’s facade is its public expression and climatic envelope. We design dynamic exterior elevations combining fluted stone, architectural louvers, ventilated cladding, glass balustrades, and weather-resilient finishes tailored to solar orientation.",
+      image: "/images/services/service-exterior.jpg",
+      deliverables: [
+        "Contemporary Facade Engineering",
+        "Architectural Louvers & Sun-Shading",
+        "Natural Stone Cladding Systems",
+        "Integrated Exterior Landscape Lighting",
+        "Facade Renovation & Modernization",
+      ],
+    },
+    {
+      id: "upvc-windows-doors",
+      slug: "upvc-windows-doors",
+      title: "UPVC Windows & Doors",
+      shortDesc: "Modern UPVC window and door solutions focused on appearance, usability, and suitable product specifications.",
+      fullDesc:
+        "High-performance architectural UPVC fenestration engineered for thermal insulation, acoustic tranquility, and seamless indoor-outdoor transitions. Featuring multi-chamber profiles, galvanized steel reinforcement, multi-point locking, and low-E double glazing.",
+      image: "/images/services/service-upvc.jpg",
+      deliverables: [
+        "Slimline Sliding Patio Glass Doors",
+        "Casement & Tilt-and-Turn Windows",
+        "Acoustic & Soundproof Double Glazing",
+        "UV & Weather-Resistant Thermal Profiles",
+        "Architectural Bronze & Charcoal Finishes",
+      ],
+    },
+  ],
+  principles: [
+    {
+      number: "01",
+      title: "Integrated Design & Build",
+      description: "Architecture, engineering, interiors, and fenestration work as one coordinated discipline without contractor disconnects.",
+    },
+    {
+      number: "02",
+      title: "Precision Engineering",
+      description: "Laser-accurate site execution, engineered material specifications, and uncompromising quality benchmarks.",
+    },
+    {
+      number: "03",
+      title: "Material & Craft Authenticity",
+      description: "Carefully sourced natural stones, sustainably harvested hardwoods, high-performance UPVC, and custom metals.",
+    },
+    {
+      number: "04",
+      title: "Tailored Spatial Solutions",
+      description: "Every blueprint and spatial plan is custom-tailored to site topography, natural daylighting, and lifestyle aspirations.",
+    },
+  ],
+  process: [
+    {
+      step: "01",
+      title: "Discover",
+      desc: "Understand your vision, site parameters, lifestyle needs, and project scope.",
+    },
+    {
+      step: "02",
+      title: "Design",
+      desc: "Develop cohesive architectural concepts, 3D spatial models, interior schemes, and facade options.",
+    },
+    {
+      step: "03",
+      title: "Plan",
+      desc: "Coordinate technical working drawings, bill of quantities, structural engineering, and material schedules.",
+    },
+    {
+      step: "04",
+      title: "Build & Deliver",
+      desc: "Execute construction with disciplined on-site oversight, milestone quality reviews, and final delivery.",
+    },
+  ],
+  illustrativeProjects: [
+    {
+      id: "the-serene-pavilion",
+      title: "The Serene Pavilion",
+      category: "Modern Villas",
+      serviceType: "Architecture & Build",
+      scope: "Conceptual Villa Showcase",
+      image: "/images/projects/project-villa-serene.jpg",
+      desc: "A cantilevered contemporary villa exploring natural timber cladding, board-formed concrete, and floor-to-ceiling glass pavilions overlooking tranquil water.",
+      features: ["Cantilevered Timber Suite", "Reflecting Pool Integration", "Double-Glazed UPVC Wall System"],
+    },
+    {
+      id: "zenith-residence",
+      title: "Zenith Multi-Level Residence",
+      category: "Residential Architecture",
+      serviceType: "Architecture & Planning",
+      scope: "Illustrative Residential Concept",
+      image: "/images/projects/project-zenith-residence.jpg",
+      desc: "Warm textured limestone and brick facade with recessed landscaped terraces, custom bronze entry gates, and energy-efficient building envelope.",
+      features: ["Textured Brick & Stucco", "Tiered Balcony Gardens", "Integrated Solar Orientation"],
+    },
+    {
+      id: "aurora-penthouse",
+      title: "Aurora Panoramic Penthouse",
+      category: "Interior Spaces",
+      serviceType: "Interior Design",
+      scope: "Conceptual Interior Showcase",
+      image: "/images/projects/project-aurora-penthouse.jpg",
+      desc: "Seamless open-plan penthouse interior featuring monolithic travertine kitchen architecture, fluted oak millwork, and custom architectural lighting.",
+      features: ["Italian Travertine Island", "Acoustic Wall Paneling", "Concealed Architectural Cove Lighting"],
+    },
+    {
+      id: "linear-commercial-atelier",
+      title: "Linear Design Atelier",
+      category: "Commercial Projects",
+      serviceType: "Architecture & Build",
+      scope: "Illustrative Commercial Concept",
+      image: "/images/projects/project-linear-commercial.jpg",
+      desc: "Modern boutique design atelier and commercial studio with floor-to-ceiling curtain wall glazing and exposed structural steel geometry.",
+      features: ["Acoustic Glazing", "Open Plan Collaboration Floors", "Low-Emissivity Double Glazing"],
+    },
+    {
+      id: "courtyard-residence",
+      title: "Courtyard Garden Villa",
+      category: "Residential Architecture",
+      serviceType: "Architecture & Interior",
+      scope: "Conceptual Residential Showcase",
+      image: "/images/projects/project-courtyard-home.jpg",
+      desc: "Inward-facing sanctuary built around a central skylit courtyard, bridging indoor living spaces with tranquil greenery and natural stone finishes.",
+      features: ["Central Skylit Courtyard", "Thermal UPVC Sliding Doors", "Passive Ventilation Design"],
+    },
+    {
+      id: "monolith-facade-transformation",
+      title: "Monolith Facade Transformation",
+      category: "Exterior Transformations",
+      serviceType: "Exterior & Facade Design",
+      scope: "Illustrative Facade Case Study",
+      image: "/images/projects/project-facade-revamp.jpg",
+      desc: "Architectural transformation of an existing residential structure with vertical bronze louvers, basalt cladding, and ambient accent lighting.",
+      features: ["Architectural Bronze Louvers", "Charcoal Basalt Panels", "Concealed LED Detailing"],
+    },
+    {
+      id: "horizon-upvc-patio-system",
+      title: "Horizon Glass & Fenestration System",
+      category: "UPVC Installations",
+      serviceType: "UPVC Windows & Doors",
+      scope: "Illustrative Fenestration Showcase",
+      image: "/images/projects/project-upvc-installation.jpg",
+      desc: "Multi-track slim-profile sliding door system opening up 12 meters of unobstructed garden connectivity with soundproofing and thermal insulation.",
+      features: ["Soundproof Acoustic Glass", "Slimline Charcoal Profiles", "Flush Floor Track Threshold"],
+    },
+    {
+      id: "contemporary-bungalow",
+      title: "The Minimalist Bungalow",
+      category: "Modern Villas",
+      serviceType: "Architecture & Build",
+      scope: "Conceptual Villa Showcase",
+      image: "/images/projects/project-modern-bungalow.jpg",
+      desc: "Single-level open-concept modernist villa with extensive covered outdoor verandas, timber soffits, and minimalist landscape integration.",
+      features: ["Single-Level Universal Flow", "Extended Deep Overhangs", "High-Performance Glazing"],
+    },
+  ],
+  materials: [
+    {
+      title: "Natural Stone & Travertine",
+      desc: "Vein-cut travertine, flamed basalt, and honed marble for enduring tactile surfaces.",
+      image: "/images/materials/material-travertine-stone.jpg",
+    },
+    {
+      title: "Architectural Wood & Joinery",
+      desc: "Fluted natural oak, thermo-treated ash, and walnut millwork with invisible hardware.",
+      image: "/images/materials/material-fluted-wood.jpg",
+    },
+    {
+      title: "Multi-Chamber UPVC Systems",
+      desc: "German-engineered multi-chamber profiles with steel cores for thermal and acoustic sealing.",
+      image: "/images/materials/material-upvc-profile.jpg",
+    },
+    {
+      title: "Architectural Lighting & Fixtures",
+      desc: "2700K warm ambient cove illumination, concealed downlights, and bronze accent trims.",
+      image: "/images/materials/material-ambient-lighting.jpg",
+    },
+  ],
+};
+
