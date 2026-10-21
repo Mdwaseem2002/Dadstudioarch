@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Project from "@/lib/models/Project";
 
+export const dynamic = "force-dynamic";
+
 // Helper to verify admin auth
 function verifyAdmin(request: NextRequest): boolean {
   const token = request.cookies.get("admin_token")?.value;

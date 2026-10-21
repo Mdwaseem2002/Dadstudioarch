@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+const DEFAULT_MONGODB_URI =
+  "mongodb+srv://DBC_Pentacoud:Pentacloud2025@cluster0.yjflp6k.mongodb.net/business_cards?retryWrites=true&w=majority&appName=Cluster0";
 
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+function getMongoUri(): string {
+  return process.env.MONGODB_URI || DEFAULT_MONGODB_URI;
 }
 
 interface MongooseCache {
@@ -31,7 +32,8 @@ async function connectDB() {
     const opts = {
       bufferCommands: false,
     };
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
+    const uri = getMongoUri();
+    cached.promise = mongoose.connect(uri, opts).then((m) => m);
   }
 
   try {
