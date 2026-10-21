@@ -17,18 +17,67 @@ const categories = [
   "UPVC Installations",
 ];
 
+/* Normalise a MongoDB project to match the BRAND shape */
+interface NormalisedProject {
+  id: string;
+  title: string;
+  category: string;
+  serviceType: string;
+  scope: string;
+  image: string;
+  desc: string;
+  features: string[];
+}
+
+function normaliseApiProject(p: any): NormalisedProject {
+  return {
+    id: p._id,
+    title: p.title,
+    category: p.category,
+    serviceType: p.category, // reuse category as service type
+    scope: p.location || "Client Project",
+    image: p.images?.[0] || "/images/placeholder.jpg",
+    desc: p.description,
+    features: [p.year && `Year: ${p.year}`, p.client && `Client: ${p.client}`, p.location && `Location: ${p.location}`].filter(Boolean) as string[],
+  };
+}
+
 export default function WorkedProjects() {
   const [activeCategory, setActiveCategory] = useState("All Showcases");
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
+  const [apiProjects, setApiProjects] = useState<NormalisedProject[]>([]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  /* Fetch projects added from admin panel */
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.projects?.length) {
+          setApiProjects(data.projects.map(normaliseApiProject));
+        }
+      })
+      .catch((err) => console.error("Failed to fetch API projects:", err));
+  }, []);
+
+  /* Merge static + dynamic projects */
+  const allProjects: NormalisedProject[] = [
+    ...apiProjects,
+    ...BRAND.illustrativeProjects,
+  ];
+
   const filteredProjects = activeCategory === "All Showcases"
-    ? BRAND.illustrativeProjects
-    : BRAND.illustrativeProjects.filter(p => p.category.toLowerCase().includes(activeCategory.toLowerCase().slice(0, 5)));
+    ? allProjects
+    : allProjects.filter((p) => {
+        if (!p.category) return false;
+        const pCat = p.category.toLowerCase().trim();
+        const aCat = activeCategory.toLowerCase().trim();
+        return pCat === aCat || pCat.includes(aCat) || aCat.includes(pCat);
+      });
 
   useEffect(() => {
     const immediateTimeout = setTimeout(() => {
@@ -43,7 +92,7 @@ export default function WorkedProjects() {
       clearTimeout(immediateTimeout);
       clearTimeout(finalTimeout);
     };
-  }, [activeCategory]);
+  }, [activeCategory, apiProjects]);
 
   return (
     <div>
@@ -177,7 +226,7 @@ export default function WorkedProjects() {
                     </p>
 
                     <div className="space-y-2 mb-6">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Integrated Specifications</p>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Details</p>
                       <div className="space-y-1.5">
                         {selectedProject.features.map((feat: string, i: number) => (
                           <div key={i} className="flex items-center gap-2 text-xs text-gray-300">

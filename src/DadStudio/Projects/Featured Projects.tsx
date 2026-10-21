@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Sparkles, Layers, ChevronLeft, ChevronRight, ArrowRight, Compass } from "lucide-react";
 import { BRAND } from "@/config/brand";
 
-const featuredProjects = BRAND.illustrativeProjects.map((proj) => ({
+interface FeaturedItem {
+  title: string;
+  description: string;
+  discipline: string;
+  scope: string;
+  category: string;
+  image: string;
+  features: string[];
+}
+
+const staticProjects: FeaturedItem[] = BRAND.illustrativeProjects.map((proj) => ({
   title: proj.title,
   description: proj.desc,
   discipline: proj.serviceType,
@@ -17,10 +27,36 @@ const featuredProjects = BRAND.illustrativeProjects.map((proj) => ({
 }));
 
 export default function FeaturedProjects() {
-  const [carouselIndex, setCarouselIndex] = useState(featuredProjects.length * 2);
+  const [dynamicProjects, setDynamicProjects] = useState<FeaturedItem[]>([]);
 
-  const repeatedProjects = Array(5).fill(featuredProjects).flat();
-  const activeProject = repeatedProjects[carouselIndex] || featuredProjects[0];
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.projects?.length) {
+          const mapped: FeaturedItem[] = data.projects.map((p: any) => ({
+            title: p.title,
+            description: p.description,
+            discipline: p.category,
+            scope: p.location || "Client Project",
+            category: p.category,
+            image: p.images?.[0] || "/images/placeholder.jpg",
+            features: [
+              p.year && `Year: ${p.year}`,
+              p.client && `Client: ${p.client}`,
+              p.location && `Location: ${p.location}`,
+            ].filter(Boolean) as string[],
+          }));
+          setDynamicProjects(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const allFeatured = [...dynamicProjects, ...staticProjects];
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  const activeProject = allFeatured[carouselIndex % allFeatured.length] || allFeatured[0];
 
   return (
     <motion.div 
@@ -111,11 +147,11 @@ export default function FeaturedProjects() {
             <div className="flex gap-3 overflow-hidden" style={{ width: 'calc(4 * 5rem + 3 * 0.75rem)' }}>
               <motion.div 
                 className="flex gap-3"
-                animate={{ x: `calc(-${carouselIndex % featuredProjects.length} * (5rem + 0.75rem))` }}
+                animate={{ x: `calc(-${carouselIndex % (allFeatured.length || 1)} * (5rem + 0.75rem))` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               >
-                {featuredProjects.map((proj, idx) => {
-                  const isSelected = (carouselIndex % featuredProjects.length) === idx;
+                {allFeatured.map((proj, idx) => {
+                  const isSelected = (carouselIndex % (allFeatured.length || 1)) === idx;
                   return (
                     <div 
                       key={idx} 
@@ -132,7 +168,7 @@ export default function FeaturedProjects() {
             </div>
 
             <button 
-              onClick={() => setCarouselIndex((prev) => prev + 1)}
+              onClick={() => setCarouselIndex((prev) => (prev + 1) % (allFeatured.length || 1))}
               className="w-10 h-10 shrink-0 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 transition-colors"
             >
               <ChevronRight size={18} />

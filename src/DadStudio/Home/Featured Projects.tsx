@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import gsap from "gsap";
@@ -10,9 +10,49 @@ import { BRAND } from "@/config/brand";
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface ProjectItem {
+  id: string;
+  title: string;
+  category: string;
+  serviceType: string;
+  scope: string;
+  image: string;
+  desc: string;
+  features: string[];
+}
+
 export default function FeaturedProjects() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [apiProjects, setApiProjects] = useState<ProjectItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.projects?.length) {
+          setApiProjects(
+            data.projects.map((p: any) => ({
+              id: p._id,
+              title: p.title,
+              category: p.category,
+              serviceType: p.category,
+              scope: p.location || "Client Project",
+              image: p.images?.[0] || "/images/placeholder.jpg",
+              desc: p.description,
+              features: [
+                p.year && `Year: ${p.year}`,
+                p.client && `Client: ${p.client}`,
+                p.location && `Location: ${p.location}`,
+              ].filter(Boolean) as string[],
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const allProjects: ProjectItem[] = [...apiProjects, ...BRAND.illustrativeProjects];
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -48,7 +88,7 @@ export default function FeaturedProjects() {
         tl.kill();
       };
     });
-  }, { scope: sectionRef });
+  }, { scope: sectionRef, dependencies: [apiProjects] });
 
   return (
     <section 
@@ -86,7 +126,7 @@ export default function FeaturedProjects() {
         {/* Scroll Track / Grid */}
         <div className="w-full overflow-visible">
           <div ref={trackRef} className="grid grid-cols-1 sm:grid-cols-2 lg:flex gap-5 lg:gap-8 w-full lg:w-max">
-            {BRAND.illustrativeProjects.map((project, idx) => (
+            {allProjects.map((project, idx) => (
               <div 
                 key={project.id}
                 className="group w-full lg:w-[380px] xl:w-[420px] shrink-0 rounded-lg overflow-hidden border border-white/10 hover:border-[#A9855B]/60 transition-colors duration-500 bg-[#161817] flex flex-col justify-between"
