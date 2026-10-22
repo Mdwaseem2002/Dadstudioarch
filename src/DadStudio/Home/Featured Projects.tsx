@@ -1,14 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { BRAND } from "@/config/brand";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectItem {
   id: string;
@@ -22,9 +17,10 @@ interface ProjectItem {
 }
 
 export default function FeaturedProjects() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [apiProjects, setApiProjects] = useState<ProjectItem[]>([]);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   useEffect(() => {
     fetch("/api/projects")
@@ -54,51 +50,39 @@ export default function FeaturedProjects() {
 
   const allProjects: ProjectItem[] = [...apiProjects, ...BRAND.illustrativeProjects];
 
-  useGSAP(() => {
-    const mm = gsap.matchMedia();
+  const updateScrollState = () => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 10);
+  };
 
-    mm.add("(min-width: 1024px)", () => {
-      const getScrollAmount = () => {
-        if (!trackRef.current || !trackRef.current.parentElement) return 0;
-        const trackWidth = trackRef.current.scrollWidth;
-        const containerWidth = trackRef.current.parentElement.offsetWidth;
-        return -(trackWidth - containerWidth);
-      };
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [allProjects]);
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: () => `+=${Math.abs(getScrollAmount()) * 1.4}`,
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-        }
-      });
-      
-      tl.to({}, { duration: 0.2 })
-        .to(trackRef.current, {
-          x: getScrollAmount,
-          ease: "none",
-          duration: 1
-        })
-        .to({}, { duration: 0.2 });
-      
-      return () => {
-        tl.kill();
-      };
-    });
-  }, { scope: sectionRef, dependencies: [apiProjects] });
+  const scroll = (direction: "left" | "right") => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const cardWidth = 400; // approximate card width + gap
+    const scrollAmount = direction === "left" ? -cardWidth : cardWidth;
+    el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
 
   return (
-    <section 
-      ref={sectionRef} 
-      className="py-16 md:py-28 lg:pt-36 bg-[#0d0f0e] relative border-t border-white/5 overflow-hidden text-white"
-    >
+    <section className="py-14 sm:py-20 md:py-24 bg-[#0d0f0e] relative border-t border-white/5 text-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 w-full">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-14 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="w-8 h-[1px] bg-[#A9855B]"></span>
@@ -106,7 +90,7 @@ export default function FeaturedProjects() {
                 Project Portfolio
               </p>
             </div>
-            <h2 className="font-instrument text-3xl sm:text-4xl md:text-5xl font-normal leading-tight">
+            <h2 className="font-instrument text-2xl sm:text-4xl md:text-5xl font-normal leading-tight">
               Curated Architectural Showcases
             </h2>
             <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
@@ -115,63 +99,98 @@ export default function FeaturedProjects() {
             </div>
           </div>
           
-          <Link 
-            href="/projects" 
-            className="border border-[#A9855B]/40 hover:border-[#A9855B] hover:bg-[#A9855B] text-white hover:text-black px-5 py-2.5 text-xs font-bold tracking-widest uppercase flex items-center gap-2 transition-all duration-300"
-          >
-            Explore All Showcases <ArrowRight size={14} />
-          </Link>
+          <div className="flex items-center gap-3">
+            {/* Arrow Controls */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => scroll("left")}
+                disabled={!canScrollLeft}
+                aria-label="Previous projects"
+                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${
+                  canScrollLeft
+                    ? "border-white/20 text-white hover:border-[#A9855B] hover:text-[#A9855B] bg-white/5"
+                    : "border-white/5 text-gray-600 cursor-not-allowed bg-transparent"
+                }`}
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                disabled={!canScrollRight}
+                aria-label="Next projects"
+                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${
+                  canScrollRight
+                    ? "border-white/20 text-white hover:border-[#A9855B] hover:text-[#A9855B] bg-white/5"
+                    : "border-white/5 text-gray-600 cursor-not-allowed bg-transparent"
+                }`}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+
+            <Link 
+              href="/projects" 
+              className="border border-[#A9855B]/40 hover:border-[#A9855B] hover:bg-[#A9855B] text-white hover:text-black px-4 sm:px-5 py-2.5 text-xs font-bold tracking-widest uppercase flex items-center gap-2 transition-all duration-300 whitespace-nowrap"
+            >
+              Explore All <ArrowRight size={14} />
+            </Link>
+          </div>
         </div>
 
-        {/* Scroll Track / Grid */}
-        <div className="w-full overflow-visible">
-          <div ref={trackRef} className="grid grid-cols-1 sm:grid-cols-2 lg:flex gap-5 lg:gap-8 w-full lg:w-max">
-            {allProjects.map((project, idx) => (
-              <div 
-                key={project.id}
-                className="group w-full lg:w-[380px] xl:w-[420px] shrink-0 rounded-lg overflow-hidden border border-white/10 hover:border-[#A9855B]/60 transition-colors duration-500 bg-[#161817] flex flex-col justify-between"
-              >
-                {/* Image Container */}
-                <div className="relative overflow-hidden aspect-[16/10] bg-black">
-                  <img 
-                    src={project.image} 
-                    alt={project.title} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
-                  />
-                  <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-medium text-gray-300 uppercase tracking-wider border border-white/10">
-                    {project.category}
-                  </div>
-                  <div className="absolute bottom-3 right-3 bg-[#A9855B]/90 backdrop-blur-md px-2 py-0.5 rounded text-[9px] font-semibold text-black uppercase tracking-wider">
-                    {project.scope}
-                  </div>
+        {/* Horizontal Carousel Track */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-5 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10"
+          style={{ scrollSnapType: "x mandatory" }}
+        >
+          {allProjects.map((project) => (
+            <div 
+              key={project.id}
+              style={{ scrollSnapAlign: "start" }}
+              className="group w-[300px] sm:w-[360px] lg:w-[400px] shrink-0 rounded-xl overflow-hidden border border-white/10 hover:border-[#A9855B]/60 transition-all duration-500 bg-[#161817] flex flex-col justify-between shadow-lg"
+            >
+              {/* Image Container */}
+              <div className="relative overflow-hidden aspect-[16/10] bg-black">
+                <img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+
+                <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-semibold text-[#A9855B] uppercase tracking-wider border border-white/10">
+                  {project.category}
                 </div>
-
-                {/* Details */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] text-[#A9855B] font-semibold tracking-widest uppercase block mb-1">
-                      {project.serviceType}
-                    </span>
-                    <h4 className="font-general font-bold text-lg text-white group-hover:text-[#A9855B] transition-colors mb-2">
-                      {project.title}
-                    </h4>
-                    <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                      {project.desc}
-                    </p>
-                  </div>
-
-                  {/* Features Tag Pills */}
-                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-                    {project.features.map((feat, fIdx) => (
-                      <span key={fIdx} className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-gray-300">
-                        {feat}
-                      </span>
-                    ))}
-                  </div>
+                <div className="absolute bottom-3 right-3 bg-[#A9855B]/90 backdrop-blur-md px-2 py-0.5 rounded text-[9px] font-semibold text-black uppercase tracking-wider">
+                  {project.scope}
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* Details */}
+              <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] text-[#A9855B] font-semibold tracking-widest uppercase block mb-1">
+                    {project.serviceType}
+                  </span>
+                  <h4 className="font-general font-bold text-base sm:text-lg text-white group-hover:text-[#A9855B] transition-colors mb-2 line-clamp-1">
+                    {project.title}
+                  </h4>
+                  <p className="text-xs text-gray-400 leading-relaxed mb-4 line-clamp-2">
+                    {project.desc}
+                  </p>
+                </div>
+
+                {/* Features Tag Pills */}
+                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+                  {project.features.slice(0, 3).map((feat, fIdx) => (
+                    <span key={fIdx} className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-gray-300">
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
       </div>

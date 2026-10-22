@@ -107,11 +107,9 @@ export default function WhyChooseDadStudioArch() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: processContainerRef.current,
-          start: "top 12%",
-          end: "+=1200",
-          pin: true,
-          scrub: 0.8,
-          anticipatePin: 1,
+          start: "top 80%",
+          end: "bottom 90%",
+          scrub: 0.6,
           onUpdate: (self) => {
             const p = self.progress;
             if (p < 0.25) setActiveStep(0);
